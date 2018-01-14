@@ -1,7 +1,7 @@
 import urllib, json
 unloaded = True
 numberofposts = 5
-url = "https://www.reddit.com/r/aww.json"
+url = "https://www.reddit.com/r/news.json"
 while unloaded:
 
   response = urllib.urlopen(url)
@@ -24,8 +24,9 @@ while unloaded:
 
         #image if there is one, or body
         if data['data']['children'][index]['data']['selftext_html'] is None:
-          #image
-          print data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
+          if 'preview' in data['data']['children'][index]['data']:
+            #image
+            print data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
         else:
           #body
           print data['data']['children'][index]['data']['selftext']
