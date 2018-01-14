@@ -149,7 +149,7 @@ def get_image_description(url):
     }
 
     params = urllib.urlencode({
-        'visualFeatures': 'Categories,Description,Subreddit',
+        'visualFeatures': 'Categories,Description,Color',
         'language': 'en',
     })
 
