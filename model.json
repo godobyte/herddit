@@ -24,6 +24,51 @@
 {
   "session": {
     "new": true,
+    "sessionId": "SessionId.7a8e1d6b-dd8d-47c2-a28c-46c95b4de657",
+    "application": {
+      "applicationId": "amzn1.ask.skill.ea9f80c7-9c75-472f-a0e0-d83be006cca2"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.AE5DA3Z5YVHG3W3SC5N7KYTUJJA3FI53BHXTNNTTFC3Q6PCK63WFCPHXQWSJ3IVGGT3VFPOVWUU7TXGAD6CYURTTVJGPLB5FURTMOEBRBF3X2ZJKKNBQAVHE665RM55HJ6QNQZ5Z47ODPQVPTDESPLA3Q5AEMTGNCQUKV4RZ6B5IFVSN772ZUGIRZDGCX5TJ6FH5GFKV3MNEM6I"
+    }
+  },
+  "request": {
+    "type": "IntentRequest",
+    "requestId": "EdwRequestId.f6e50059-3e42-4be0-b801-0e82d3340cfd",
+    "intent": {
+      "name": "MySubredIntent",
+      "slots": {
+        "Subreddit": {
+          "name": "Subreddit",
+          "value": "ubc"
+        }
+      }
+    },
+    "locale": "en-US",
+    "timestamp": "2018-01-14T10:14:10Z"
+  },
+  "context": {
+    "AudioPlayer": {
+      "playerActivity": "IDLE"
+    },
+    "System": {
+      "application": {
+        "applicationId": "amzn1.ask.skill.ea9f80c7-9c75-472f-a0e0-d83be006cca2"
+      },
+      "user": {
+        "userId": "amzn1.ask.account.AE5DA3Z5YVHG3W3SC5N7KYTUJJA3FI53BHXTNNTTFC3Q6PCK63WFCPHXQWSJ3IVGGT3VFPOVWUU7TXGAD6CYURTTVJGPLB5FURTMOEBRBF3X2ZJKKNBQAVHE665RM55HJ6QNQZ5Z47ODPQVPTDESPLA3Q5AEMTGNCQUKV4RZ6B5IFVSN772ZUGIRZDGCX5TJ6FH5GFKV3MNEM6I"
+      },
+      "device": {
+        "supportedInterfaces": {}
+      }
+    }
+  },
+  "version": "1.0"
+}
+{
+  "session": {
+    "new": true,
     "sessionId": "SessionId.6b4382b1-65c6-4d5b-9207-a72c8394411f",
     "application": {
       "applicationId": "amzn1.ask.skill.ea9f80c7-9c75-472f-a0e0-d83be006cca2"
