@@ -84,10 +84,10 @@ def set_subred_in_session(intent, session):
         session_attributes = create_favorite_Subreddit_attributes(favorite_Subreddit)
         speech_output = "The Subreddit you picked is " + \
                         favorite_Subreddit + \
-                        ". You can ask me your favorite Subreddit by saying, " \
-                        "what's my favorite Subreddit?"
-        reprompt_text = "You can ask me your favorite Subreddit by saying, " \
-                        "what's my favorite Subreddit?"
+                        ". You can ask me to read your favorite Subreddit by saying, " \
+                        "read my favorite Subreddit."
+        reprompt_text = "You can ask me to read your favorite Subreddit by saying, " \
+                        "read my favorite Subreddit."
     else:
         speech_output = "I'm not sure what your favorite Subreddit is. " \
                         "Please try again."
