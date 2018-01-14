@@ -99,7 +99,7 @@ def set_subred_in_session(intent, session):
 
 def get_reddit_posts(subreddit):
     unloaded = True
-    numberofposts = 5
+    numberofposts = 2
     url = "https://www.reddit.com/r/%s.json" % subreddit
     print(url)
     speech = "";
@@ -123,8 +123,8 @@ def get_reddit_posts(subreddit):
               #image
               image_url = data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
               print("querying Microsoft Vision API" + image_url)
-              print(get_image_description(image_url))
-              speech += str(get_image_description(image_url))
+              description = str(get_image_description(image_url))
+              speech += description
             else:
               #body
               print(data['data']['children'][index]['data']['selftext'])
