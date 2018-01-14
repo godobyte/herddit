@@ -16,6 +16,8 @@ while unloaded:
 
 
       if not data['data']['children'][index]['data']['stickied']:
+        #permalink
+        print "https://reddit.com"+data['data']['children'][index]['data']['permalink']
 
         #title
         print data['data']['children'][index]['data']['title']
