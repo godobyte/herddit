@@ -10,7 +10,7 @@
       "intent": "MySubredIntent"
     },
     {
-      "intent": "WhatsMySubredditIntent"
+      "intent": "ReadSubredIntent"
     },
     {
       "intent": "StopIntent"

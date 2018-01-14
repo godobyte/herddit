@@ -223,7 +223,7 @@ def on_intent(intent_request, session):
     # Dispatch to your skill's intent handlers
     if intent_name == "MySubredIntent":
         return set_subred_in_session(intent, session)
-    elif intent_name == "WhatsMySubredditIntent":
+    elif intent_name == "ReadSubredIntent":
         return get_Subreddit_from_session(intent, session)
     elif intent_name == "StopIntent":
         return on_session_stopped(intent, session)
