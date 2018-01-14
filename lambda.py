@@ -108,7 +108,7 @@ def get_subreddit_from_session(intent, session):
         favorite_subreddit = session['attributes']['favoriteSubreddit']
 
         # construct and read reddit
-        speech_output = get_reddit_posts(favorite_subreddit) + ". If you want to switch to another sub reddit, please say switch with your chosen subreddit. \\"
+        speech_output = get_reddit_posts(favorite_subreddit) + ". If you want to switch to another sub reddit, please say switch with your chosen subreddit."
 
 
         should_end_session = False
@@ -139,10 +139,10 @@ def on_session_stopped(session_ended_request, session):
 
 # --------------- Functions helpers for reddit post reading ------------------
 def get_reddit_posts(subreddit):
-    numberofposts = 2
+    numberofposts = 1
     url = "https://www.reddit.com/r/%s.json" % subreddit
     print(url)
-    speech = "";
+    speech = '';
     data = {}
 
     # Keep Trying until data is received
@@ -183,7 +183,7 @@ def get_reddit_posts(subreddit):
     return speech
 
 def comment_parse(url1):
-  numberofcomments=3
+  numberofcomments=1
   index1 = 0
   parsedcomment = ''
   data1 = {'error': 'none'};
@@ -193,7 +193,7 @@ def comment_parse(url1):
 
   while index1 < numberofcomments:
     try:
-      parsedcomment+= "Comment Number " + (index +1)
+      parsedcomment+= "The Top Comment is"
       comment = data1[1]['data']['children'][index1]['data']['body']
       while 'http' in comment and '.jpg' in comment:
         parsedcomment = parsedcomment + comment[0:comment.find("http")]
@@ -212,6 +212,7 @@ def comment_parse(url1):
       index1 = index1 + 1
     except Exception as e:
       if index1 is 0:
+        print (e)
         parsedcomment+="There are no comments"
       else:
         print('no more comments')
