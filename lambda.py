@@ -100,7 +100,8 @@ def set_subred_in_session(intent, session):
 def get_reddit_posts(subreddit):
     unloaded = True
     numberofposts = 5
-    url = "https://www.reddit.com/r/%sjson" % subreddit
+    url = "https://www.reddit.com/r/%s.json" % subreddit
+    print(url)
     speech = "";
 
     while unloaded:
@@ -116,16 +117,18 @@ def get_reddit_posts(subreddit):
           if not data['data']['children'][index]['data']['stickied']:
             #title
             print(data['data']['children'][index]['data']['title'])
-            speech += data['data']['children'][index]['data']['title']
+            speech += str(data['data']['children'][index]['data']['title'])
             #image if there is one, or body
             if data['data']['children'][index]['data']['selftext_html'] is None:
               #image
               image_url = data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
-              speech += get_image_description(image_url);
+              print("querying Microsoft Vision API" + image_url)
+              print(get_image_description(image_url))
+              speech += str(get_image_description(image_url))
             else:
               #body
               print(data['data']['children'][index]['data']['selftext'])
-              speech += data['data']['children'][index]['data']['selftext'];
+              speech += str(data['data']['children'][index]['data']['selftext'])
 
             sum = sum + 1
           index = index + 1
@@ -181,7 +184,8 @@ def get_Subreddit_from_session(intent, session):
         should_end_session = True
     else:
         speech_output = "I'm not sure what your favorite Subreddit is. " \
-                        "You can say, my favorite Subreddit is red."
+                        "You can tell me your favorite Subreddit by saying, " \
+                        "my favorite Subreddit is u b c."
         should_end_session = False
 
     # Setting reprompt_text to None signifies that we do not want to reprompt
