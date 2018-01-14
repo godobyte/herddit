@@ -47,11 +47,11 @@ def get_welcome_response():
     session_attributes = {}
     card_title = "Welcome"
     speech_output = "Welcome to the herd it. " \
-                    "Please pick your favorite sub reddit " \
+                    "Please pick a sub reddit " \
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "Please tell me your favorite subreddit by saying, " \
-                    "read u b c subreddit."
+    reprompt_text = "Please choose a subreddit by saying, " \
+                    "for example u b c."
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
@@ -60,7 +60,7 @@ def get_welcome_response():
 def handle_session_end_request():
     card_title = "Session Ended"
     speech_output = "Thank you for using herd it. " \
-                    "Have a nice day! "
+                    "Now you have herd it! "
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return build_response({}, build_speechlet_response(
@@ -84,16 +84,16 @@ def set_subred_in_session(intent, session):
         session_attributes = create_favorite_Subreddit_attributes(favorite_Subreddit)
         speech_output = "The Subreddit you picked is " + \
                         favorite_Subreddit + \
-                        ". You can ask me to read your favorite Subreddit by saying, " \
-                        "read my favorite Subreddit."
-        reprompt_text = "You can ask me to read your favorite Subreddit by saying, " \
-                        "read my favorite Subreddit."
+                        ". You can ask me to read your chosen Subreddit by saying, " \
+                        "read"
+        reprompt_text = "You can ask me to read your chosen Subreddit by saying, " \
+                        "read."
     else:
-        speech_output = "I'm not sure what your favorite Subreddit is. " \
+        speech_output = "I'm not sure what your chosen Subreddit is. " \
                         "Please try again."
-        reprompt_text = "I'm not sure what your favorite Subreddit is. " \
-                        "You can tell me your favorite Subreddit by saying, " \
-                        "my favorite Subreddit is u b c."
+        reprompt_text = "I'm not sure what your chosen Subreddit is. " \
+                        "You can pick a Subreddit by saying, " \
+                        "for example u b c."
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
@@ -184,9 +184,9 @@ def get_Subreddit_from_session(intent, session):
         speech_output = get_reddit_posts(favorite_Subreddit)
         should_end_session = True
     else:
-        speech_output = "I'm not sure what your favorite Subreddit is. " \
-                        "You can tell me your favorite Subreddit by saying, " \
-                        "my favorite Subreddit is u b c."
+        speech_output = "I'm not sure what your chosen Subreddit is. " \
+                        "You can pick a Subreddit by saying, " \
+                        "for example u b c."
         should_end_session = False
 
     # Setting reprompt_text to None signifies that we do not want to reprompt
