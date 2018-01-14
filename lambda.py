@@ -173,11 +173,50 @@ def get_reddit_posts(subreddit):
           print(data['data']['children'][index]['data']['selftext'])
           speech += " \\ Content, " + str(data['data']['children'][index]['data']['selftext'])
 
+        comment_url = "https://reddit.com"+data['data']['children'][index]['data']['permalink'] +".json"
+
+        speech+= comment_parse(comment_url)
         read_posts = read_posts + 1
       index = index + 1
 
     print(speech)
     return speech
+
+def comment_parse(url1):
+  numberofcomments=3
+  index1 = 0
+  parsedcomment = ''
+  data1 = {'error': 'none'};
+  while 'error' in data1:
+    print ("Loading...")
+    data1 = json.loads(urllib.urlopen(url1).read())
+
+  while index1 < numberofcomments:
+    try:
+      parsedcomment+= "Comment Number " + (index +1)
+      comment = data1[1]['data']['children'][index1]['data']['body']
+      while 'http' in comment and '.jpg' in comment:
+        parsedcomment = parsedcomment + comment[0:comment.find("http")]
+        comment = comment[comment.find("http"):len(comment)]
+        if '.jpg' in comment:
+          if 'http' not in comment[5:comment.find(".jpg")+4]:
+            picture = comment[0:comment.find(".jpg")+4]
+            parsedcomment = parsedcomment + get_image_description(picture)
+          else:
+            parsedcomment = parsedcomment + comment[0:5]
+            comment = comment[5:len(comment)]
+            parsedcomment = parsedcomment = comment[0:comment.find('http')]
+            comment = comment[comment.find('http'):len(comment)]
+        comment = comment[comment.find(".jpg")+4:len(comment)]
+      parsedcomment = parsedcomment +comment
+      index1 = index1 + 1
+    except Exception as e:
+      if index1 is 0:
+        parsedcomment+="There are no comments"
+      else:
+        print('no more comments')
+      index1=numberofcomments;
+  return parsedcomment
 
 def get_image_description(url):
     print("querying Microsoft Vision API: " + url)
