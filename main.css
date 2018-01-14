@@ -1,0 +1,7 @@
+html, 
+body {
+    height: 100%;
+    font-size: 16px;
+    font-family: 'Cubano-Regular';
+    background: url('./img/pattern.jpg') center center;
+}

@@ -1,0 +1,20 @@
+html, 
+body {
+    height: 100%;
+    font-size: 16px;
+    font-family: 'Cubano-Regular';
+    background: url('./img/pattern.jpg') center center;
+}
+
+footer {
+    background-color: #222;
+    padding-bottom: 10px;
+    position: relative;
+    text-align: center;
+}
+footer p {
+    color: #888;
+    text-align: center;
+    margin-top: 45px;
+    font-size: 18px;
+}
