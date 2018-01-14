@@ -110,7 +110,7 @@ def get_subreddit_from_session(intent, session):
         # construct and read reddit
         speech_output = get_reddit_posts(favorite_subreddit) + ". If you want to switch to another sub reddit, please say switch with your chosen subreddit. \\"
 
-        session_attributes = create_favorite_subreddit_attributes("Comment", comment_url)
+
         should_end_session = False
     else:
         speech_output = "I'm not sure what your chosen subreddit is. " \
@@ -124,31 +124,7 @@ def get_subreddit_from_session(intent, session):
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
-# ReadCommentIntent
-def get_comment_from_session(intent, session):
-    print("in get_comment_from_session")
-    session_attributes = {}
-    reprompt_text = None
 
-    if session.get('attributes', {}) and "Comment" in session.get('attributes', {}):
-        comment_url = session['attributes']['Comment']
-
-        # construct and read reddit
-        speech_output = " \\ The top comment is: \\" + get_reddit_comment(comment_url)
-
-        session_attributes = create_favorite_subreddit_attributes("Comment", comment_url)
-        should_end_session = False
-    else:
-        speech_output = "I'm not sure what your chosen subreddit is. " \
-                        "You can pick a subreddit by saying, " \
-                        "for example UBC."
-        should_end_session = False
-
-    # Setting reprompt_text to None signifies that we do not want to reprompt
-    # the user. If the user does not respond or says something that is not
-    # understood, the session will end.
-    return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
 
 # StopIntent, this is not working yet
 def on_session_stopped(session_ended_request, session):
