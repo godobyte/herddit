@@ -1,0 +1,92 @@
+{
+  "intents": [
+    {
+      "slots": [
+        {
+          "name": "Color",
+          "type": "LIST_OF_COLORS"
+        }
+      ],
+      "intent": "MyColorIsIntent"
+    },
+    {
+      "intent": "WhatsMyColorIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}
+
+{
+  "session": {
+    "new": true,
+    "sessionId": "SessionId.6b4382b1-65c6-4d5b-9207-a72c8394411f",
+    "application": {
+      "applicationId": "amzn1.ask.skill.ea9f80c7-9c75-472f-a0e0-d83be006cca2"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.AE5DA3Z5YVHG3W3SC5N7KYTUJJA3FI53BHXTNNTTFC3Q6PCK63WFCPHXQWSJ3IVGGT3VFPOVWUU7TXGAD6CYURTTVJGPLB5FURTMOEBRBF3X2ZJKKNBQAVHE665RM55HJ6QNQZ5Z47ODPQVPTDESPLA3Q5AEMTGNCQUKV4RZ6B5IFVSN772ZUGIRZDGCX5TJ6FH5GFKV3MNEM6I"
+    }
+  },
+  "request": {
+    "type": "LaunchRequest",
+    "requestId": "EdwRequestId.d198b2c4-016b-44fc-8533-2ae4dc338058",
+    "locale": "en-US",
+    "timestamp": "2018-01-14T00:47:41Z"
+  },
+  "context": {
+    "AudioPlayer": {
+      "playerActivity": "IDLE"
+    },
+    "System": {
+      "application": {
+        "applicationId": "amzn1.ask.skill.ea9f80c7-9c75-472f-a0e0-d83be006cca2"
+      },
+      "user": {
+        "userId": "amzn1.ask.account.AE5DA3Z5YVHG3W3SC5N7KYTUJJA3FI53BHXTNNTTFC3Q6PCK63WFCPHXQWSJ3IVGGT3VFPOVWUU7TXGAD6CYURTTVJGPLB5FURTMOEBRBF3X2ZJKKNBQAVHE665RM55HJ6QNQZ5Z47ODPQVPTDESPLA3Q5AEMTGNCQUKV4RZ6B5IFVSN772ZUGIRZDGCX5TJ6FH5GFKV3MNEM6I"
+      },
+      "device": {
+        "supportedInterfaces": {}
+      }
+    }
+  },
+  "version": "1.0"
+}
+
+{
+  "version": "1.0",
+  "response": {
+    "outputSpeech": {
+      "text": "Welcome to the Alexa Skills Kit sample. Please tell me your favorite color by saying, my favorite color is red",
+      "type": "PlainText"
+    },
+    "card": {
+      "content": "SessionSpeechlet - Welcome to the Alexa Skills Kit sample. Please tell me your favorite color by saying, my favorite color is red",
+      "title": "SessionSpeechlet - Welcome"
+    },
+    "reprompt": {
+      "outputSpeech": {
+        "text": "Please tell me your favorite color by saying, my favorite color is red.",
+        "type": "PlainText"
+      }
+    },
+    "speechletResponse": {
+      "outputSpeech": {
+        "text": "Welcome to the Alexa Skills Kit sample. Please tell me your favorite color by saying, my favorite color is red"
+      },
+      "card": {
+        "content": "SessionSpeechlet - Welcome to the Alexa Skills Kit sample. Please tell me your favorite color by saying, my favorite color is red",
+        "title": "SessionSpeechlet - Welcome"
+      },
+      "reprompt": {
+        "outputSpeech": {
+          "text": "Please tell me your favorite color by saying, my favorite color is red."
+        }
+      },
+      "shouldEndSession": false
+    }
+  },
+  "sessionAttributes": {}
+}
