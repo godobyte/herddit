@@ -1,0 +1,4 @@
+MySubredIntent read {Subreddit} subreddit
+MySubredIntent {Subreddit}
+ReadSubredIntent read my favorite Subreddit
+ReadSubredIntent read
