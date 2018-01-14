@@ -46,7 +46,7 @@ def get_welcome_response():
     print("in handle_session_end_request")
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Welcome to the herd it. " \
+    speech_output = "Welcome to herd it. " \
                     "Please pick a sub reddit " \
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
@@ -108,7 +108,7 @@ def get_subreddit_from_session(intent, session):
         favorite_subreddit = session['attributes']['favoriteSubreddit']
 
         # construct and read reddit
-        speech_output = get_reddit_posts(favorite_subreddit) + "If you want to switch to another sub reddit, please say switch with your chosen subreddit"
+        speech_output = get_reddit_posts(favorite_subreddit) + ". If you want to switch to another sub reddit, please say switch with your chosen subreddit"
         should_end_session = False
     else:
         speech_output = "I'm not sure what your chosen subreddit is. " \
@@ -154,20 +154,20 @@ def get_reddit_posts(subreddit):
       if not data['data']['children'][index]['data']['stickied']:
         # Get Title
         print(data['data']['children'][index]['data']['title'])
-        speech += "Title," + str(data['data']['children'][index]['data']['title'])
+        pos = " \\ Post number %s \\  " % str(index+1)
+        speech += pos + str(data['data']['children'][index]['data']['title'])
         # Check if the post is a link or a text post
         if data['data']['children'][index]['data']['selftext_html'] is None:
           # Check if there is an image
           if 'preview' in data['data']['children'][index]['data']:
             # Image Handling
-            image_url = "Image,"+ data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
-            print("querying Microsoft Vision API: " + image_url)
+            image_url = data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
             description = str(get_image_description(image_url))
-            speech += description
+            speech += " \\ The post contains an image of, \\ " + description
         else:
           #  Self Text added to speech
           print(data['data']['children'][index]['data']['selftext'])
-          speech += "Content," + str(data['data']['children'][index]['data']['selftext'])
+          speech += " \\ Content, " + str(data['data']['children'][index]['data']['selftext'])
 
         read_posts = read_posts + 1
       index = index + 1
@@ -176,6 +176,7 @@ def get_reddit_posts(subreddit):
     return speech
 
 def get_image_description(url):
+    print("querying Microsoft Vision API: " + url)
 
     subscription_key = 'da370ca9abc04597846057a56fca8f7f'
     uri_base = 'westcentralus.api.cognitive.microsoft.com'
