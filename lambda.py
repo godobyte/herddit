@@ -98,42 +98,43 @@ def set_subred_in_session(intent, session):
         card_title, speech_output, reprompt_text, should_end_session))
 
 def get_reddit_posts(subreddit):
-    unloaded = True
     numberofposts = 2
     url = "https://www.reddit.com/r/%s.json" % subreddit
     print(url)
     speech = "";
+    data = {}
 
-    while unloaded:
-      response = urllib.urlopen(url)
-      data = json.loads(response.read())
+    # Keep Trying until data is received
+    while 'data' not in data:
+      data = json.loads(urllib.urlopen(url).read())
+      print "loading"
 
-      if 'data' in data:
-        unloaded = False
-        sum = 0;
-        index = 0;
 
-        while sum < numberofposts:
-          if not data['data']['children'][index]['data']['stickied']:
-            #title
-            print(data['data']['children'][index]['data']['title'])
-            speech += str(data['data']['children'][index]['data']['title'])
-            #image if there is one, or body
-            if data['data']['children'][index]['data']['selftext_html'] is None:
-              #image
-              image_url = data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
-              print("querying Microsoft Vision API" + image_url)
-              description = str(get_image_description(image_url))
-              speech += description
-            else:
-              #body
-              print(data['data']['children'][index]['data']['selftext'])
-              speech += str(data['data']['children'][index]['data']['selftext'])
+    read_posts = 0;
+    index = 0;
 
-            sum = sum + 1
-          index = index + 1
-      else:
-        print("Loading...")
+    while read_posts < numberofposts:
+      # Skip Stickied Posts
+      if not data['data']['children'][index]['data']['stickied']:
+        # Get Title
+        print(data['data']['children'][index]['data']['title'])
+        speech += str(data['data']['children'][index]['data']['title'])
+        # Check if the post is a link or a text post
+        if data['data']['children'][index]['data']['selftext_html'] is None:
+          # Check if there is an image
+          if 'preview' in data['data']['children'][index]['data']:
+            # Image Handling
+            image_url = data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
+            print("querying Microsoft Vision API" + image_url)
+            description = str(get_image_description(image_url))
+            speech += description
+        else:
+          #  Self Text added to speech
+          print(data['data']['children'][index]['data']['selftext'])
+          speech += str(data['data']['children'][index]['data']['selftext'])
+
+        read_posts = read_posts + 1
+      index = index + 1
 
     print(speech)
     return speech
