@@ -3,14 +3,17 @@
     {
       "slots": [
         {
-          "name": "Color",
-          "type": "LIST_OF_COLORS"
+          "name": "Subreddit",
+          "type": "LIST_OF_SUBREDDIT"
         }
       ],
-      "intent": "MyColorIsIntent"
+      "intent": "MySubredIntent"
     },
     {
-      "intent": "WhatsMyColorIntent"
+      "intent": "ReadSubredIntent"
+    },
+    {
+      "intent": "StopIntent"
     },
     {
       "intent": "AMAZON.HelpIntent"
