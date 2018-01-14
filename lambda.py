@@ -43,7 +43,7 @@ def build_response(session_attributes, speechlet_response):
 def get_welcome_response():
     """ initialize the session
     """
-
+    print("in handle_session_end_request")
     session_attributes = {}
     card_title = "Welcome"
     speech_output = "Welcome to the herd it. " \
@@ -56,8 +56,9 @@ def get_welcome_response():
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
-# StopIntent
+# AMAZON.HelpIntent - EndSession
 def handle_session_end_request():
+    print("in handle_session_end_request")
     card_title = "Session Ended"
     speech_output = "Thank you for using herd it. " \
                     "Now you have herd it! "
@@ -74,7 +75,7 @@ def create_favorite_subreddit_attributes(favorite_subreddit):
 def set_subred_in_session(intent, session):
     """ Subreddit picked by user
     """
-
+    print("in set_subred_in_session")
     card_title = intent['name']
     session_attributes = {}
     should_end_session = False
@@ -99,14 +100,16 @@ def set_subred_in_session(intent, session):
 
 # ReadSubredIntent
 def get_subreddit_from_session(intent, session):
+    print("in get_subreddit_from_session")
     session_attributes = {}
     reprompt_text = None
 
     if session.get('attributes', {}) and "favoriteSubreddit" in session.get('attributes', {}):
         favorite_subreddit = session['attributes']['favoriteSubreddit']
 
+        # construct and read reddit
         speech_output = get_reddit_posts(favorite_subreddit)
-        should_end_session = True
+        should_end_session = False
     else:
         speech_output = "I'm not sure what your chosen subreddit is. " \
                         "You can pick a subreddit by saying, " \
@@ -118,6 +121,17 @@ def get_subreddit_from_session(intent, session):
     # understood, the session will end.
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
+
+# StopIntent, this is not working yet
+def on_session_stopped(session_ended_request, session):
+    print("in on_session_stopped")
+    card_title = "Session Stopped"
+    speech_output = "Thank you for using herd it. " \
+                    "Now you have herd it! "
+    # Setting this to true ends the session and exits the skill.
+    should_end_session = True
+    return build_response({}, build_speechlet_response(
+        card_title, speech_output, None, should_end_session))
 
 # --------------- Functions helpers for reddit post reading ------------------
 def get_reddit_posts(subreddit):
@@ -236,14 +250,6 @@ def on_intent(intent_request, session):
         return handle_session_end_request()
     else:
         raise ValueError("Invalid intent")
-
-def on_session_stopped(session_ended_request, session):
-    """ Called when the user ends the session.
-
-    Is not called when the skill returns should_end_session=true
-    """
-    print("on_session_ended requestId=" + session_ended_request['requestId'] +
-          ", sessionId=" + session['sessionId'])
 
 def on_session_ended(session_ended_request, session):
     """ Called when the user ends the session.

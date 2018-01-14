@@ -1,4 +1,5 @@
 MySubredIntent read {Subreddit} subreddit
-MySubredIntent {Subreddit}
-ReadSubredIntent read my favorite Subreddit
+MySubredIntent {Subreddit} subreddit
+ReadSubredIntent read the Subreddit
 ReadSubredIntent read
+StopIntent stop
