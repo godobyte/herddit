@@ -1,13 +1,10 @@
 """
-This sample demonstrates a simple skill built with the Amazon Alexa Skills Kit.
-The Intent Schema, Custom Slots, and Sample Utterances for this skill, as well
-as testing instructions are located at http://amzn.to/1LzFrj6
-
-For additional samples, visit the Alexa Skills Kit Getting Started guide at
-http://amzn.to/1LGWsLG
+Alexa app herddit
+@nwHacks2018
 """
 
 from __future__ import print_function
+import httplib, urllib, base64, json, sys
 
 
 # --------------- Helpers that build all of the responses ----------------------
@@ -44,19 +41,17 @@ def build_response(session_attributes, speechlet_response):
 # --------------- Functions that control the skill's behavior ------------------
 
 def get_welcome_response():
-    """ If we wanted to initialize the session to have some attributes we could
-    add those here
+    """ initialize the session
     """
 
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Welcome to the Alexa Skills Kit sample. " \
-                    "Please tell me your favorite color by saying, " \
-                    "my favorite color is red"
+    speech_output = "Welcome to the herd it. " \
+                    "Please pick your favorite sub reddit " \
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "Please tell me your favorite color by saying, " \
-                    "my favorite color is red."
+    reprompt_text = "Please tell me your favorite subreddit by saying, " \
+                    "read u b c subreddit."
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
@@ -64,7 +59,7 @@ def get_welcome_response():
 
 def handle_session_end_request():
     card_title = "Session Ended"
-    speech_output = "Thank you for trying the Alexa Skills Kit sample. " \
+    speech_output = "Thank you for using herd it. " \
                     "Have a nice day! "
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
@@ -72,50 +67,121 @@ def handle_session_end_request():
         card_title, speech_output, None, should_end_session))
 
 
-def create_favorite_color_attributes(favorite_color):
-    return {"favoriteColor": favorite_color}
+def create_favorite_Subreddit_attributes(favorite_Subreddit):
+    return {"favoriteSubreddit": favorite_Subreddit}
 
 
-def set_color_in_session(intent, session):
-    """ Sets the color in the session and prepares the speech to reply to the
-    user.
+def set_subred_in_session(intent, session):
+    """ Subreddit picked by user
     """
 
     card_title = intent['name']
     session_attributes = {}
     should_end_session = False
 
-    if 'Color' in intent['slots']:
-        favorite_color = intent['slots']['Color']['value']
-        session_attributes = create_favorite_color_attributes(favorite_color)
-        speech_output = "I now know your favorite color is " + \
-                        favorite_color + \
-                        ". You can ask me your favorite color by saying, " \
-                        "what's my favorite color?"
-        reprompt_text = "You can ask me your favorite color by saying, " \
-                        "what's my favorite color?"
+    if 'Subreddit' in intent['slots']:
+        favorite_Subreddit = intent['slots']['Subreddit']['value']
+        session_attributes = create_favorite_Subreddit_attributes(favorite_Subreddit)
+        speech_output = "The Subreddit you picked is " + \
+                        favorite_Subreddit + \
+                        ". You can ask me your favorite Subreddit by saying, " \
+                        "what's my favorite Subreddit?"
+        reprompt_text = "You can ask me your favorite Subreddit by saying, " \
+                        "what's my favorite Subreddit?"
     else:
-        speech_output = "I'm not sure what your favorite color is. " \
+        speech_output = "I'm not sure what your favorite Subreddit is. " \
                         "Please try again."
-        reprompt_text = "I'm not sure what your favorite color is. " \
-                        "You can tell me your favorite color by saying, " \
-                        "my favorite color is red."
+        reprompt_text = "I'm not sure what your favorite Subreddit is. " \
+                        "You can tell me your favorite Subreddit by saying, " \
+                        "my favorite Subreddit is u b c."
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
+def get_reddit_posts(subreddit):
+    unloaded = True
+    numberofposts = 5
+    url = "https://www.reddit.com/r/%sjson" % subreddit
+    speech = "";
 
-def get_color_from_session(intent, session):
+    while unloaded:
+      response = urllib.urlopen(url)
+      data = json.loads(response.read())
+
+      if 'data' in data:
+        unloaded = False
+        sum = 0;
+        index = 0;
+
+        while sum < numberofposts:
+          if not data['data']['children'][index]['data']['stickied']:
+            #title
+            print data['data']['children'][index]['data']['title']
+            speech += data['data']['children'][index]['data']['title']
+            #image if there is one, or body
+            if data['data']['children'][index]['data']['selftext_html'] is None:
+              #image
+              image_url = data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
+              speech += get_image_description(image_url);
+            else:
+              #body
+              print data['data']['children'][index]['data']['selftext']
+              speech += data['data']['children'][index]['data']['selftext'];
+
+            sum = sum + 1
+          index = index + 1
+      else:
+        print "Loading..."
+
+    print speech
+    return speech
+
+def get_image_description(url):
+
+    subscription_key = 'da370ca9abc04597846057a56fca8f7f'
+    uri_base = 'westcentralus.api.cognitive.microsoft.com'
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': subscription_key,
+    }
+
+    params = urllib.urlencode({
+        'visualFeatures': 'Categories,Description,Subreddit',
+        'language': 'en',
+    })
+
+    body = "{'url':'%s'}" % url
+
+    try:
+        # Execute the REST API call and get the response.
+        conn = httplib.HTTPSConnection('westcentralus.api.cognitive.microsoft.com')
+        conn.request("POST", "/vision/v1.0/analyze?%s" % params, body, headers)
+        response = conn.getresponse()
+        data = response.read()
+
+        # 'data' contains the JSON data. The following formats the JSON data for display.
+        parsed = json.loads(data)
+        print ("Response:")
+        print parsed['description']['captions'][0]['text']
+        conn.close()
+        return parsed['description']['captions'][0]['text']
+
+    except Exception as e:
+        print('Error:')
+        print(e)
+
+def get_Subreddit_from_session(intent, session):
     session_attributes = {}
     reprompt_text = None
 
-    if session.get('attributes', {}) and "favoriteColor" in session.get('attributes', {}):
-        favorite_color = session['attributes']['favoriteColor']
-        speech_output = "Your favorite color is " + favorite_color + \
-                        ". Goodbye."
+    if session.get('attributes', {}) and "favoriteSubreddit" in session.get('attributes', {}):
+        favorite_Subreddit = session['attributes']['favoriteSubreddit']
+
+        speech_output = get_reddit_posts(favorite_Subreddit)
         should_end_session = True
     else:
-        speech_output = "I'm not sure what your favorite color is. " \
-                        "You can say, my favorite color is red."
+        speech_output = "I'm not sure what your favorite Subreddit is. " \
+                        "You can say, my favorite Subreddit is red."
         should_end_session = False
 
     # Setting reprompt_text to None signifies that we do not want to reprompt
@@ -155,10 +221,12 @@ def on_intent(intent_request, session):
     intent_name = intent_request['intent']['name']
 
     # Dispatch to your skill's intent handlers
-    if intent_name == "MyColorIsIntent":
-        return set_color_in_session(intent, session)
-    elif intent_name == "WhatsMyColorIntent":
-        return get_color_from_session(intent, session)
+    if intent_name == "MySubredIntent":
+        return set_subred_in_session(intent, session)
+    elif intent_name == "WhatsMySubredditIntent":
+        return get_Subreddit_from_session(intent, session)
+    elif intent_name == "StopIntent":
+        return on_session_stopped(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
         return get_welcome_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
@@ -166,6 +234,13 @@ def on_intent(intent_request, session):
     else:
         raise ValueError("Invalid intent")
 
+def on_session_stopped(session_ended_request, session):
+    """ Called when the user ends the session.
+
+    Is not called when the skill returns should_end_session=true
+    """
+    print("on_session_ended requestId=" + session_ended_request['requestId'] +
+          ", sessionId=" + session['sessionId'])
 
 def on_session_ended(session_ended_request, session):
     """ Called when the user ends the session.
