@@ -84,9 +84,9 @@ def set_subred_in_session(intent, session):
         session_attributes = create_favorite_Subreddit_attributes(favorite_Subreddit)
         speech_output = "The Subreddit you picked is " + \
                         favorite_Subreddit + \
-                        ". You can ask me to read your chosen Subreddit by saying, " \
+                        ". You can ask me to read this Subreddit by saying, " \
                         "read"
-        reprompt_text = "You can ask me to read your chosen Subreddit by saying, " \
+        reprompt_text = "You can ask me to read this Subreddit by saying, " \
                         "read."
     else:
         speech_output = "I'm not sure what your chosen Subreddit is. " \
@@ -107,7 +107,7 @@ def get_reddit_posts(subreddit):
     # Keep Trying until data is received
     while 'data' not in data:
       data = json.loads(urllib.urlopen(url).read())
-      print "loading"
+      print ("loading")
 
 
     read_posts = 0;
