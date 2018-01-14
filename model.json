@@ -1,4 +1,24 @@
 {
+  "intents": [
+    {
+      "slots": [
+        {
+          "name": "Color",
+          "type": "LIST_OF_COLORS"
+        }
+      ],
+      "intent": "MyColorIsIntent"
+    },
+    {
+      "intent": "WhatsMyColorIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}
+
+{
   "session": {
     "new": true,
     "sessionId": "SessionId.6b4382b1-65c6-4d5b-9207-a72c8394411f",
