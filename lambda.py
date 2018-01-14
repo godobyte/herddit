@@ -115,7 +115,7 @@ def get_reddit_posts(subreddit):
         while sum < numberofposts:
           if not data['data']['children'][index]['data']['stickied']:
             #title
-            print data['data']['children'][index]['data']['title']
+            print(data['data']['children'][index]['data']['title'])
             speech += data['data']['children'][index]['data']['title']
             #image if there is one, or body
             if data['data']['children'][index]['data']['selftext_html'] is None:
@@ -124,15 +124,15 @@ def get_reddit_posts(subreddit):
               speech += get_image_description(image_url);
             else:
               #body
-              print data['data']['children'][index]['data']['selftext']
+              print(data['data']['children'][index]['data']['selftext'])
               speech += data['data']['children'][index]['data']['selftext'];
 
             sum = sum + 1
           index = index + 1
       else:
-        print "Loading..."
+        print("Loading...")
 
-    print speech
+    print(speech)
     return speech
 
 def get_image_description(url):
@@ -162,7 +162,7 @@ def get_image_description(url):
         # 'data' contains the JSON data. The following formats the JSON data for display.
         parsed = json.loads(data)
         print ("Response:")
-        print parsed['description']['captions'][0]['text']
+        print(parsed['description']['captions'][0]['text'])
         conn.close()
         return parsed['description']['captions'][0]['text']
 
