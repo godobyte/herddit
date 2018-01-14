@@ -39,64 +39,101 @@ def build_response(session_attributes, speechlet_response):
 
 
 # --------------- Functions that control the skill's behavior ------------------
-
+# AMAZON.HelpIntent
 def get_welcome_response():
     """ initialize the session
     """
-
+    print("in handle_session_end_request")
     session_attributes = {}
     card_title = "Welcome"
     speech_output = "Welcome to the herd it. " \
-                    "Please pick your favorite sub reddit " \
+                    "Please pick a sub reddit " \
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "Please tell me your favorite subreddit by saying, " \
-                    "read u b c subreddit."
+    reprompt_text = "Please choose a subreddit by saying, " \
+                    "for example UBC."
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
-
+# AMAZON.HelpIntent - EndSession
 def handle_session_end_request():
+    print("in handle_session_end_request")
     card_title = "Session Ended"
     speech_output = "Thank you for using herd it. " \
-                    "Have a nice day! "
+                    "Now you have herd it! "
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return build_response({}, build_speechlet_response(
         card_title, speech_output, None, should_end_session))
 
 
-def create_favorite_Subreddit_attributes(favorite_Subreddit):
-    return {"favoriteSubreddit": favorite_Subreddit}
+def create_favorite_subreddit_attributes(favorite_subreddit):
+    return {"favoriteSubreddit": favorite_subreddit}
 
-
+# MySubredIntent
 def set_subred_in_session(intent, session):
     """ Subreddit picked by user
     """
-
+    print("in set_subred_in_session")
     card_title = intent['name']
     session_attributes = {}
     should_end_session = False
 
     if 'Subreddit' in intent['slots']:
-        favorite_Subreddit = intent['slots']['Subreddit']['value']
-        session_attributes = create_favorite_Subreddit_attributes(favorite_Subreddit)
-        speech_output = "The Subreddit you picked is " + \
-                        favorite_Subreddit + \
-                        ". You can ask me to read your favorite Subreddit by saying, " \
-                        "read my favorite Subreddit."
-        reprompt_text = "You can ask me to read your favorite Subreddit by saying, " \
-                        "read my favorite Subreddit."
+        favorite_subreddit = intent['slots']['Subreddit']['value']
+        session_attributes = create_favorite_subreddit_attributes(favorite_subreddit)
+        speech_output = "The subreddit you picked is " + \
+                        favorite_subreddit + \
+                        ". You can ask me to read this subreddit by saying, " \
+                        "read."
+        reprompt_text = "You can ask me to read this subreddit by saying, " \
+                        "read."
     else:
-        speech_output = "I'm not sure what your favorite Subreddit is. " \
+        speech_output = "I'm not sure what your chosen subreddit is. " \
                         "Please try again."
-        reprompt_text = "I'm not sure what your favorite Subreddit is. " \
-                        "You can tell me your favorite Subreddit by saying, " \
-                        "my favorite Subreddit is u b c."
+        reprompt_text = "Sorry, I'm not sure what your chosen subreddit is. " \
+                        "You can pick a subreddit by saying, " \
+                        "for example UBC."
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
+# ReadSubredIntent
+def get_subreddit_from_session(intent, session):
+    print("in get_subreddit_from_session")
+    session_attributes = {}
+    reprompt_text = None
+
+    if session.get('attributes', {}) and "favoriteSubreddit" in session.get('attributes', {}):
+        favorite_subreddit = session['attributes']['favoriteSubreddit']
+
+        # construct and read reddit
+        speech_output = get_reddit_posts(favorite_subreddit) + "If you want to switch to another sub reddit, please say switch with your chosen subreddit"
+        should_end_session = False
+    else:
+        speech_output = "I'm not sure what your chosen subreddit is. " \
+                        "You can pick a subreddit by saying, " \
+                        "for example UBC."
+        should_end_session = False
+
+    # Setting reprompt_text to None signifies that we do not want to reprompt
+    # the user. If the user does not respond or says something that is not
+    # understood, the session will end.
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
+
+# StopIntent, this is not working yet
+def on_session_stopped(session_ended_request, session):
+    print("in on_session_stopped")
+    card_title = "Session Stopped"
+    speech_output = "Thank you for using herd it. " \
+                    "Now you have herd it! "
+    # Setting this to true ends the session and exits the skill.
+    should_end_session = True
+    return build_response({}, build_speechlet_response(
+        card_title, speech_output, None, should_end_session))
+
+# --------------- Functions helpers for reddit post reading ------------------
 def get_reddit_posts(subreddit):
     numberofposts = 2
     url = "https://www.reddit.com/r/%s.json" % subreddit
@@ -107,8 +144,7 @@ def get_reddit_posts(subreddit):
     # Keep Trying until data is received
     while 'data' not in data:
       data = json.loads(urllib.urlopen(url).read())
-      print "loading"
-
+      print ("loading")
 
     read_posts = 0;
     index = 0;
@@ -118,20 +154,20 @@ def get_reddit_posts(subreddit):
       if not data['data']['children'][index]['data']['stickied']:
         # Get Title
         print(data['data']['children'][index]['data']['title'])
-        speech += str(data['data']['children'][index]['data']['title'])
+        speech += "Title," + str(data['data']['children'][index]['data']['title'])
         # Check if the post is a link or a text post
         if data['data']['children'][index]['data']['selftext_html'] is None:
           # Check if there is an image
           if 'preview' in data['data']['children'][index]['data']:
             # Image Handling
-            image_url = data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
-            print("querying Microsoft Vision API" + image_url)
+            image_url = "Image,"+ data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
+            print("querying Microsoft Vision API: " + image_url)
             description = str(get_image_description(image_url))
             speech += description
         else:
           #  Self Text added to speech
           print(data['data']['children'][index]['data']['selftext'])
-          speech += str(data['data']['children'][index]['data']['selftext'])
+          speech += "Content," + str(data['data']['children'][index]['data']['selftext'])
 
         read_posts = read_posts + 1
       index = index + 1
@@ -165,36 +201,12 @@ def get_image_description(url):
 
         # 'data' contains the JSON data. The following formats the JSON data for display.
         parsed = json.loads(data)
-        print ("Response:")
-        print(parsed['description']['captions'][0]['text'])
+        print("Response: " + parsed['description']['captions'][0]['text'])
         conn.close()
         return parsed['description']['captions'][0]['text']
 
     except Exception as e:
-        print('Error:')
-        print(e)
-
-def get_Subreddit_from_session(intent, session):
-    session_attributes = {}
-    reprompt_text = None
-
-    if session.get('attributes', {}) and "favoriteSubreddit" in session.get('attributes', {}):
-        favorite_Subreddit = session['attributes']['favoriteSubreddit']
-
-        speech_output = get_reddit_posts(favorite_Subreddit)
-        should_end_session = True
-    else:
-        speech_output = "I'm not sure what your favorite Subreddit is. " \
-                        "You can tell me your favorite Subreddit by saying, " \
-                        "my favorite Subreddit is u b c."
-        should_end_session = False
-
-    # Setting reprompt_text to None signifies that we do not want to reprompt
-    # the user. If the user does not respond or says something that is not
-    # understood, the session will end.
-    return build_response(session_attributes, build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
-
+        print('Error in get_image_description:' + e)
 
 # --------------- Events ------------------
 
@@ -229,7 +241,7 @@ def on_intent(intent_request, session):
     if intent_name == "MySubredIntent":
         return set_subred_in_session(intent, session)
     elif intent_name == "ReadSubredIntent":
-        return get_Subreddit_from_session(intent, session)
+        return get_subreddit_from_session(intent, session)
     elif intent_name == "StopIntent":
         return on_session_stopped(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
@@ -238,14 +250,6 @@ def on_intent(intent_request, session):
         return handle_session_end_request()
     else:
         raise ValueError("Invalid intent")
-
-def on_session_stopped(session_ended_request, session):
-    """ Called when the user ends the session.
-
-    Is not called when the skill returns should_end_session=true
-    """
-    print("on_session_ended requestId=" + session_ended_request['requestId'] +
-          ", sessionId=" + session['sessionId'])
 
 def on_session_ended(session_ended_request, session):
     """ Called when the user ends the session.

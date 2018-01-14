@@ -1,5 +1,5 @@
 LaunchRequest
-
+Welcome to Hearddit. Please choose the following subreddits. 
 
 
 IntentRequest
