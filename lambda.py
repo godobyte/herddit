@@ -92,7 +92,7 @@ def set_subred_in_session(intent, session):
     else:
         speech_output = "I'm not sure what your chosen subreddit is. " \
                         "Please try again."
-        reprompt_text = "I'm not sure what your chosen subreddit is. " \
+        reprompt_text = "Sorry, I'm not sure what your chosen subreddit is. " \
                         "You can pick a subreddit by saying, " \
                         "for example UBC."
     return build_response(session_attributes, build_speechlet_response(
@@ -108,7 +108,7 @@ def get_subreddit_from_session(intent, session):
         favorite_subreddit = session['attributes']['favoriteSubreddit']
 
         # construct and read reddit
-        speech_output = get_reddit_posts(favorite_subreddit)
+        speech_output = get_reddit_posts(favorite_subreddit) + "If you want to switch to another sub reddit, please say switch with your chosen subreddit"
 
         session_attributes = create_favorite_subreddit_attributes("Comment", comment_url)
         should_end_session = False
@@ -182,20 +182,20 @@ def get_reddit_posts(subreddit):
       if not data['data']['children'][index]['data']['stickied']:
         # Get Title
         print(data['data']['children'][index]['data']['title'])
-        speech += str(data['data']['children'][index]['data']['title'])
+        speech += "Title," + str(data['data']['children'][index]['data']['title'])
         # Check if the post is a link or a text post
         if data['data']['children'][index]['data']['selftext_html'] is None:
           # Check if there is an image
           if 'preview' in data['data']['children'][index]['data']:
             # Image Handling
-            image_url = data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
+             image_url = "Image,"+ data['data']['children'][index]['data']['preview']['images'][0]['source']['url']
             print("querying Microsoft Vision API: " + image_url)
             description = str(get_image_description(image_url))
             speech += description
         else:
           #  Self Text added to speech
           print(data['data']['children'][index]['data']['selftext'])
-          speech += str(data['data']['children'][index]['data']['selftext'])
+          speech += "Content," + str(data['data']['children'][index]['data']['selftext'])
 
         read_posts = read_posts + 1
       index = index + 1
