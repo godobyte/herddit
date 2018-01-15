@@ -1,6 +1,6 @@
 import urllib, json
-numberofposts = 1
-url = "https://www.reddit.com/r/herddithack.json"
+numberofposts = 3
+url = "https://www.reddit.com/r/funny.json"
 url1=""
 data = {};
 while 'data' not in data:
@@ -32,7 +32,7 @@ while sum < numberofposts:
   index = index + 1
 
   #comment code
-  numberofcomments=5
+  numberofcomments=1
   index1 = 0
   data1 = {'error': 'none'};
   print "comment:"
