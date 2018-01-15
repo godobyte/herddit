@@ -104,6 +104,38 @@ def get_subreddit_from_session(intent, session):
     session_attributes = {}
     reprompt_text = None
 
+    if session.get('attributes', {}) and "redditData" in session.get('attributes', {}):
+        reddit_data = session['attributes']['redditData']
+
+        # construct and read reddit
+        speech_output = parse_reddit_posts(reddit_data[0])
+        session_attributes = create_favorite_subreddit_attributes("redditData", reddit_data[1:])
+        should_end_session = False
+
+    eif session.get('attributes', {}) and "favoriteSubreddit" in session.get('attributes', {}):
+        favorite_subreddit = session['attributes']['favoriteSubreddit']
+
+        # construct and read reddit
+        speech_output = get_reddit_posts(favorite_subreddit) + ". If you want to switch to another sub reddit, please say switch with your chosen subreddit. \\"
+
+        should_end_session = False
+    else:
+        speech_output = "You can switch to a subreddit by saying, " \
+                        "for example switch to UBC." \
+                        "or hear the next post by saying next." \
+        should_end_session = False
+
+    # Setting reprompt_text to None signifies that we do not want to reprompt
+    # the user. If the user does not respond or says something that is not
+    # understood, the session will end.
+    return build_response(session_attributes, build_speechlet_response(
+        intent['name'], speech_output, reprompt_text, should_end_session))
+
+def get_subreddit_from_session(intent, session):
+    print("in get_subreddit_from_session")
+    session_attributes = {}
+    reprompt_text = None
+
     if session.get('attributes', {}) and "favoriteSubreddit" in session.get('attributes', {}):
         favorite_subreddit = session['attributes']['favoriteSubreddit']
 
@@ -123,8 +155,6 @@ def get_subreddit_from_session(intent, session):
     # understood, the session will end.
     return build_response(session_attributes, build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
-
-
 
 # StopIntent, this is not working yet
 def on_session_stopped(session_ended_request, session):
