@@ -178,7 +178,7 @@ def get_reddit_posts(subreddit):
 def get_image_description(url):
     print("querying Microsoft Vision API: " + url)
 
-    subscription_key = 'da370ca9abc04597846057a56fca8f7f'
+    subscription_key = '***********'
     uri_base = 'westcentralus.api.cognitive.microsoft.com'
 
     headers = {

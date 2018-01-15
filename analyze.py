@@ -10,12 +10,12 @@ import httplib, urllib, base64, json, sys
 def main(argv):
 
         # Replace the subscription_key string value with your valid subscription key.
-    subscription_key = 'da370ca9abc04597846057a56fca8f7f'
+    subscription_key = '*********'
 
     # Replace or verify the region.
     #
     # You must use the same region in your REST API call as you used to obtain your subscription keys.
-    # For example, if you obtained your subscription keys from the westus region, replace 
+    # For example, if you obtained your subscription keys from the westus region, replace
     # "westcentralus" in the URI below with "westus".
     #
     # NOTE: Free trial subscription keys are generated in the westcentralus region, so if you are using
@@ -58,4 +58,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv)
-
